@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>BOCCO API EXAMPLE</h1>
+    <div>
+        <label>Email</label>
+        <input type="text" value="" id="email">
+    </div>
+
+    <div>
+        <label>password</label>
+        <input type="password" value="" id="password">
+    </div>
+
+    <div>
+        <label>API Key</label>
+        <input type="password" value="" id="apikey">
+    </div>
+
+    <button id="fetchAccessToken">Fetch AccessToken</button>
+
+    <br>
+
+    <div>
+        <label>AccessToken: </label>
+        <input type="text" id="accessTokenField" size="70">
+    </div>
+
+    <div>
+        <label>RoomId: </label>
+        <input type="text" id="roomIdField" size="70">
+    </div>
+
+    <div>
+        <label>NewMessage: </label>
+        <audio id="newMessageVoice"></audio>
+    </div>
+
+    <br>
+
+    <div>
+        <button id="fetchRoom">Fetch Room</button>
+        <textarea id="roomResponse" cols="50" rows="10"></textarea>
+    </div>
+
+    <div>
+        <button id="fetchMessage">Fetch Message</button>
+        <textarea id="messageResponse" cols="50" rows="10"></textarea>
+    </div>
+
+    <br>
+
+    <div>
+        <label>Send Message</label>
+        <button id="startRecordingButton">Start</button>
+        <button id="stopRecordingButton">Stop</button>
+    </div>
+</body>
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="scripts/bocco.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/s1r-J/Recorderjs/dist/recorder.js"></script>
+<script src="scripts/recorderClient.js"></script>
+
+<script>
+    window.onload = () => {
+        // アクセストークンがあれば取得
+        let accessToken = localStorage.getItem("access_token");
+        document.getElementById('accessTokenField').value = accessToken;
+
+        // bocco-web API クライアントの初期化
+        const bocco = accessToken === null ? new BOCCO() : new BOCCO(accessToken);
+
+        // アクセストークンを取得するボタン
+        document.getElementById('fetchAccessToken').addEventListener('click', async () => {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const apikey = document.getElementById("apikey").value;
+
+            accessToken = await bocco.fetchAccessToken(email, password, apikey);
+
+            const accessTokenField = document.getElementById("accessToken");
+            accessTokenField.value = accessToken;
+            localStorage.setItem("access_token", accessToken);
+        });
+
+        // ルーム一覧を取得するボタン
+        document.getElementById('fetchRoom').addEventListener('click', async () => {
+            const response = await bocco.fetchRoom();
+            const roomResponse = document.getElementById('roomResponse');
+            roomResponse.value = JSON.stringify(response.data);
+            document.getElementById('roomIdField').value = response.data[0].uuid;
+        });
+
+        // メッセージ一覧を取得するボタン
+        document.getElementById('fetchMessage').addEventListener('click', async () => {
+            const roomId = document.getElementById('roomIdField').value;
+            const response = await bocco.fetchMessage(roomId);
+
+            const voice = response.data.filter((x) => {
+                return x.user.user_type === "bocco"
+            }).pop().audio;
+
+            const newMessageVoice = document.getElementById('newMessageVoice');
+            newMessageVoice.src = voice + "?access_token=" + accessToken;
+            newMessageVoice.play();
+
+            document.getElementById('messageResponse').value = JSON.stringify(response.data);
+        });
+
+        // レコーダーの初期化
+        const recorderClient = new RecorderClient();
+
+        // 録音開始
+        const startRecordingButton = document.getElementById('startRecordingButton');
+        startRecordingButton.addEventListener('click', () => {
+            startRecordingButton.disabled = true;
+            recorderClient.start();
+        });
+
+        // 録音停止
+        const stopRecordingButton = document.getElementById('stopRecordingButton');
+        stopRecordingButton.addEventListener('click', () => {
+            startRecordingButton.disabled = false;
+            recorderClient.stop(async (blob) => {
+                const roomId = document.getElementById('roomIdField').value;
+                const response = await bocco.postVoice(roomId, blob);
+                console.log(response.data.message);
+            });
+        })
+    };
+</script>
