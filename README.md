@@ -7,6 +7,8 @@ Firebase Cloud Functions で中継してリクエストを送る。
 目的は BOCCO との「音声通信」を実現するためで、  
 現状の機能も音声通信に関わるものに限定されている。
 
+公式ドキュメント: http://api-docs.bocco.me/index.html
+
 # 機能概要
 
 - メールアドレス/パスワード/APIキーから `access_token` を取得する
@@ -16,7 +18,8 @@ Firebase Cloud Functions で中継してリクエストを送る。
 
 # 利用方法
 
-中継APIのエンドポイント: https://us-central1-bocco-api.cloudfunctions.net/
+- API検証用Webページ: https://yakimelon.github.io/BOCCO-WebClient/bocco-web/
+- 中継APIのエンドポイント: https://us-central1-bocco-api.cloudfunctions.net/
 
 中継APIを web で使うための SDK と依存関係。
 ```html
