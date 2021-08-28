@@ -7,6 +7,7 @@ Firebase Cloud Functions で中継してリクエストを送る。
 目的は BOCCO との「音声通信」を実現するためで、  
 現状の機能も音声通信に関わるものに限定されている。
 
+BOCCO 製品ページ: https://www.bocco.me/bocco/  
 公式ドキュメント: http://api-docs.bocco.me/index.html
 
 # 機能概要
