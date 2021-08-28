@@ -25,8 +25,8 @@ Firebase Cloud Functions で中継してリクエストを送る。
 ```html
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/s1r-J/Recorderjs/dist/recorder.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/yakimelon/BOCCO-WebClient/bocco-web/scripts/bocco.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/yakimelon/BOCCO-WebClient/bocco-web/scripts/recorderClient.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/yakimelon/BOCCO-WebClient@76d8aeec782057d7d47f9b96ac4e2b587f3e74a6/bocco-web/scripts/bocco.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/yakimelon/BOCCO-WebClient@76d8aeec782057d7d47f9b96ac4e2b587f3e74a6/bocco-web/scripts/recorderClient.js"></script>
 ```
 
 スクリプト例は下記の通り。
