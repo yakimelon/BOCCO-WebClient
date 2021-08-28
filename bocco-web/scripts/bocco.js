@@ -31,6 +31,10 @@ class BOCCO {
         });
     }
 
+    fetchAudioLink(voiceUrl) {
+        return voiceUrl + "?access_token=" + this.accessToken;
+    }
+
     async postVoice(roomId, blob) {
         const data = new FormData();
         data.append("audio", blob, "voice.wav");

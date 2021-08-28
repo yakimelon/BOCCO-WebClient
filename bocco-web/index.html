@@ -105,12 +105,12 @@
             const roomId = document.getElementById('roomIdField').value;
             const response = await bocco.fetchMessage(roomId);
 
-            const voice = response.data.filter((x) => {
+            const voiceUrl = response.data.filter((x) => {
                 return x.user.user_type === "bocco"
             }).pop().audio;
 
             const newMessageVoice = document.getElementById('newMessageVoice');
-            newMessageVoice.src = voice + "?access_token=" + accessToken;
+            newMessageVoice.src = bocco.fetchAudioLink(voiceUrl);
             newMessageVoice.play();
 
             document.getElementById('messageResponse').value = JSON.stringify(response.data);
