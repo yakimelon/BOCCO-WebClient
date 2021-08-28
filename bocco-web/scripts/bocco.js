@@ -31,6 +31,18 @@ class BOCCO {
         });
     }
 
+    async newBoccoMessage(roomId) {
+        const response = await axios.request({
+            method: 'get',
+            url: this._fetchApiUrl('messages'),
+            params: {access_token: this.accessToken, room_id: roomId}
+        });
+
+        return response.data.filter((x) => {
+            return x.user.user_type === "bocco"
+        }).pop();
+    }
+
     fetchAudioLink(voiceUrl) {
         return voiceUrl + "?access_token=" + this.accessToken;
     }
